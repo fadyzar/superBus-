@@ -57,6 +57,8 @@ bool isCityExist(char cityName[],char tempStation[],char tempLine[]){
         for(int j=0;j<citiesList[i].amountOfStations;j++){
             if(strcmp(citiesList[i].stations[j].stationName,tempStation)==0){
                 for(int k=0;k<SIZE;k++){
+                    if(strcmp(citiesList[i].stations[j].Lines[k].busLine,tempLine)==0)
+                        return true;
                     if(strcmp(citiesList[i].stations[j].Lines[k].busLine,"")==0){
                         strcpy( citiesList[i].stations[j].Lines[k].busLine ,tempLine);
                         return true;
@@ -66,10 +68,12 @@ bool isCityExist(char cityName[],char tempStation[],char tempLine[]){
         }
         strcpy(citiesList[i].stations[citiesList[i].amountOfStations].stationName,tempStation);
             for(int k=0;k<SIZE;k++){
+                if(strcmp(citiesList[i].stations[citiesList[i].amountOfStations].Lines[k].busLine,tempLine)==0)
+                    return true;
                 if(strcmp(citiesList[i].stations[citiesList[i].amountOfStations].Lines[k].busLine,"")==0){
                     strcpy( citiesList[i].stations[(citiesList[i].amountOfStations)++].Lines[k].busLine ,tempLine);
                         return true;
-                }
+              }
             }
         }
   }
@@ -107,7 +111,7 @@ void showCities(){
                 }
                 if(column==17){
                     strcpy(tempCity,value);
-                    if(isCityExist(value,tempStation,tempLine)){
+                    if(isCityExist(tempCity,tempStation,tempLine)){
                         break;
                     }
                     else {
@@ -115,7 +119,12 @@ void showCities(){
                         (citiesList[currentCity].cityName,value);
                         strcpy
                         (citiesList[currentCity].stations[(citiesList[currentCity].amountOfStations)].stationName,tempStation);
-                        strcpy (citiesList[currentCity].stations[(citiesList[currentCity].amountOfStations)++].Lines[currentCity].busLine ,tempLine);
+                        for(int k=0;k<SIZE;k++){
+                            if(strcmp(citiesList[currentCity].stations[citiesList[currentCity].amountOfStations].Lines[k].busLine,"")==0){
+                                strcpy( citiesList[currentCity].stations[(citiesList[currentCity].amountOfStations)++].Lines[k].busLine ,tempLine);
+                                    break;
+                          }
+                        }
                         currentCity++;
                     }
                 }
@@ -127,21 +136,25 @@ void showCities(){
     }
 }
 
-/*void busStaionList(){
+void busLineList(){
     printf("Bus line list:\n");
-     for(int i=0;i<citiesList[i].amountOfStations;i++){
-         printf("\n%s station: \n",citiesList[i].stations[i].stationName);
-         for(int j=0;j<SIZE;j++){
-             printf("bus line %d:  %s\n",j,citiesList[j].stations[j].Lines[j].busLine);
+    for(int i=0;i<AMOUNTOFCITIES;i++){
+        printf("\n%d %s:",i+1,citiesList[i].cityName);
+        for(int j=0;j<citiesList[i].amountOfStations;j++){
+             printf("\n\tstation %s lines: \n",citiesList[i].stations[j].stationName);
+            for(int k=0;k<SIZE;k++){
+                if (strcmp(citiesList[i].stations[j].Lines[k].busLine,"")!=0)
+                    printf("\t\tbus lines %d:  %s\n",k+1,citiesList[i].stations[j].Lines[k].busLine);
+            }
         }
     }
 }
-*/
+
 
 void printCity(){
  printf("city list:\n");
   for(int i=0;i<AMOUNTOFCITIES;i++){
-   printf("%d %s\n",i,citiesList[i].cityName);
+   printf("%d %s\n",i+1,citiesList[i].cityName);
   }
 }
 
@@ -150,14 +163,15 @@ void busStaionList(){
      for(int i=0;i<AMOUNTOFCITIES;i++){
          printf("\n%s stations: \n",citiesList[i].cityName);
          for(int j=0;j<citiesList[i].amountOfStations;j++)
-             printf("station %d:  %s\n",j,citiesList[i].stations[j].stationName);
+             printf("station %d:  %s\n",j+1,citiesList[i].stations[j].stationName);
      }
 }
 
 //void disCity(){}
 //void disStaion()//BFS{}
 int main(){
-   
+    initAmountOfStations();
+    showCities();
     for(;;){
         //printf("\033[1;34m");
         printf("\n\nPlease choose option:\n");
@@ -170,8 +184,8 @@ int main(){
 
         int option;
         scanf("%d",&option);
-        initAmountOfStations();
-        showCities();
+        //initAmountOfStations();
+        //showCities();
         switch (option)
         {
             case 1:
@@ -181,6 +195,7 @@ int main(){
                 busStaionList();
                 break;
             case 3:
+                busLineList();
                 break;
             case 4:
                 //disCity();//show the dis between one city and other
