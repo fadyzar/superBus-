@@ -1,1 +1,1 @@
-char* value = strtok(buffer, ",");
+har cityName[MAXNAME];
